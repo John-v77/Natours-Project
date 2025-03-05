@@ -1,4 +1,15 @@
-exports.testController = (req, res) => {
-    console.log(req)
-    res.status(200).send('Hello fromm the server side! - controller2');  
-}    
+const fs = require('fs');
+
+const tours = JSON.parse(
+    fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
+)
+
+const getAllTours = (req, res) => {
+    res.status(200).send(tours);
+}
+
+
+
+module.exports = {
+    getAllTours,
+}
