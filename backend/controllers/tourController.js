@@ -3,9 +3,21 @@ const colors = require('colors')
 
 // Bulk actions
 
-const getAllTours = (req, res) => {
-    console.log(req.params)
-    res.status(200).send(tours);
+const getAllTours = async (req, res) => {
+    try {
+        const tours = await Tour.find()
+        console.log(tours, 'tours'.blue)
+        res.status(200).json({
+            status: 'success',
+            results: tours.length,
+            data: { tours }
+        })
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        })
+    }
 }
 
 
