@@ -43,15 +43,39 @@ const createTour = async (req, res) => {
     }
 }
 
-const getTourById = (req, res) => {
-    console.log(req.params)
-    res.status(200).send('get tour by ID');
+const getTourById = async (req, res) => {
+    try {
+        const searchedTour = await Tour.findById(req.params.id)
+
+        res.status(200).json({
+            status: 'success',
+            data: { tour: searchedTour }
+        })
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        })
+    }
 }
 
 
-const updateTourPackage = (req, res) => {
-    console.log(req.params)
-    res.status(200).send('updating tour by ID');
+const updateTourPackage = async (req, res) => {
+    try {
+        const updatedTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        })
+
+        res.status(200).json({
+            status: 'success',
+            data: { tour: updatedTour }
+        })
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        })
+    }
 }
 
 
