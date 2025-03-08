@@ -79,9 +79,20 @@ const updateTourPackage = async (req, res) => {
 }
 
 
-const deleteTourPackage = (req, res) => {
-    console.log(req.params)
-    res.status(204).send('delete tour by ID');
+const deleteTourPackage = async (req, res) => {
+    try {
+        await Tour.findByIdAndRemove(req.params.id)
+
+        res.status(204).json({
+            status: 'success',
+            data: null
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        })
+    }
 }
 
 
