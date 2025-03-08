@@ -1,9 +1,5 @@
-const fs = require('fs');
-
-const tours = JSON.parse(
-    fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
-)
-
+const Tour = require('../models/tourModel');
+const colors = require('colors')
 
 // Bulk actions
 
@@ -15,9 +11,24 @@ const getAllTours = (req, res) => {
 
 // Sigle Item controlers
 
-const createTour = (req, res) => {
-    console.log(req.body)
-    res.status(201).send('Creating tour');
+const createTour = async (req, res) => {
+    console.log(req.body, "body".red)
+
+    try {
+        const newTour = await Tour.create(req.body);
+        res.status(201).json({
+            status: 'success',
+            data: {
+                tour: newTour
+            }
+        })
+
+    } catch (err) {
+        res.status(400).json({
+            status: 'fail',
+            message: err
+        })
+    }
 }
 
 const getTourById = (req, res) => {

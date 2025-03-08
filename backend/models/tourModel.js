@@ -17,5 +17,5 @@ const TourSchema = new Schema({
 })
 
 
-
-exports.tourModel = model('Tour', TourSchema)
+const Tour = model('Tour', TourSchema)
+module.exports = Tour;
