@@ -18,7 +18,7 @@ const TourSchema = new Schema({
         type: String,
         required: [true, 'a tour must have a dificulty'],
     },
-    ratingAverate: {
+    ratingsAverate: {
         type: Number,
         default: 4.5
     },

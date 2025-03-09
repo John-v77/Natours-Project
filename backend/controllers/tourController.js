@@ -4,6 +4,23 @@ const colors = require('colors')
 
 // Bulk actions
 
+
+const aliasTopTours = (req, res, next) => {
+    try {
+        req.query.limit = '5';
+        req.query.sort = '-ratingsAverate, price';
+        // req.query.fields = 'name, price, ratingsAverate, summary, difficulty';
+        next()
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        })
+    }
+
+}
+
+
 const getAllTours = async (req, res) => {
     try {
         // Filtering
@@ -43,7 +60,7 @@ const getAllTours = async (req, res) => {
 
         if (req.query.page) {
             const numTours = await Tour.countDocuments();
-            if (skip >= numTours) throw new Error('This page does not exists');
+            if (skipNo >= numTours) { throw new Error('This page does not exists') };
         }
 
         toursQueried = toursQueried.skip(skipNo).limit(limitNo);
@@ -144,5 +161,6 @@ module.exports = {
     createTour,
     getTourById,
     updateTourPackage,
-    deleteTourPackage
+    deleteTourPackage,
+    aliasTopTours
 }
