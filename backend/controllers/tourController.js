@@ -1,15 +1,15 @@
 const Tour = require('../models/tourModel');
+const APIFeatures = require('../utils/apiFeatures')
 const colors = require('colors')
 // Need to write documentation on api
 
+
 // Bulk actions
-
-
 const aliasTopTours = (req, res, next) => {
     try {
         req.query.limit = '5';
         req.query.sort = '-ratingsAverate, price';
-        // req.query.fields = 'name, price, ratingsAverate, summary, difficulty';
+        req.query.fields = 'name, price, ratingsAverate, summary, difficulty';
         next()
     } catch (err) {
         res.status(404).json({
@@ -17,55 +17,16 @@ const aliasTopTours = (req, res, next) => {
             message: err
         })
     }
-
 }
-
 
 const getAllTours = async (req, res) => {
     try {
-        // Filtering
-        const queryObj = { ...req.query }
-        const excludedFields = ['page', 'sort', 'limit', 'fields'];
-        excludedFields.forEach(el => delete queryObj[el]);
+        const features = new APIFeatures(Tour.find(), req.query)
+            .filter()
+            .sort()
+            .paginate();
 
-
-        // Advanced filtering
-        let queryStr = JSON.stringify(queryObj)
-        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
-
-        let toursQueried = Tour.find(JSON.parse(queryStr))
-
-        // Sorting
-        if (req.query.sort) {
-            const sortBy = req.query.sort.split(',').join(' ')
-            toursQueried = toursQueried.sort(sortBy)
-        } else {
-            toursQueried = toursQueried.sort('-createdAt')
-        }
-
-
-        // Field limiting
-        if (req.query.fields) {
-            const fields = req.query.fields.split(',').join(' ')
-            toursQueried = toursQueried.select(fields)
-        } else {
-            toursQueried = toursQueried.select('-__v')
-        }
-
-
-        // Pagination
-        const page = req.query.page * 1 || 1;
-        const limitNo = req.query.limit * 1 || 20;
-        const skipNo = (page - 1) * limitNo;
-
-        if (req.query.page) {
-            const numTours = await Tour.countDocuments();
-            if (skipNo >= numTours) { throw new Error('This page does not exists') };
-        }
-
-        toursQueried = toursQueried.skip(skipNo).limit(limitNo);
-
-        const tours = await toursQueried
+        const tours = await features.query
 
         res.status(200).json({
             status: 'success',
@@ -82,7 +43,6 @@ const getAllTours = async (req, res) => {
 
 
 // Sigle Item controlers
-
 const createTour = async (req, res) => {
 
     try {
@@ -153,7 +113,6 @@ const deleteTourPackage = async (req, res) => {
         })
     }
 }
-
 
 
 module.exports = {
