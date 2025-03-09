@@ -1,10 +1,10 @@
 const Tour = require('../models/tourModel');
-
+const colors = require('colors')
 // Need to write documentation on api
 
 // Bulk actions
-const getAllTours = async (req, res) => {
 
+const getAllTours = async (req, res) => {
     try {
         // Filtering
         const queryObj = { ...req.query }
@@ -16,8 +16,17 @@ const getAllTours = async (req, res) => {
         let queryStr = JSON.stringify(queryObj)
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
 
-        const tours = await Tour.find(JSON.parse(queryStr))
+        let toursQueried = Tour.find(JSON.parse(queryStr))
 
+        // Sorting
+        if (req.query.sort) {
+            const sortBy = req.query.sort.split(',').join(' ')
+            toursQueried = toursQueried.sort(sortBy)
+        } else {
+            toursQueried = toursQueried.sort('-createdAt')
+        }
+
+        const tours = await toursQueried
 
         res.status(200).json({
             status: 'success',
