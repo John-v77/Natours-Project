@@ -52,6 +52,15 @@ const TourSchema = new Schema({
         select: false
     },
     startDates: [Date]
+},
+    {
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
+    });
+
+// Virtual fields - cannot query agains them. 
+TourSchema.virtual('durationWeeks').get(function () {
+    return this.duration / 7;
 })
 
 
