@@ -1,11 +1,13 @@
 const { Schema, model } = require('mongoose');
+const slugify = require('slugify')
 
-const TourSchema = new Schema({
+const tourSchema = new Schema({
     name: {
         type: String,
         required: [true, 'Add a name for Tours'],
         unique: true
     },
+    slug: String,
     duration: {
         type: Number,
         required: [true, 'a tour must have a duration'],
@@ -59,10 +61,27 @@ const TourSchema = new Schema({
     });
 
 // Virtual fields - cannot query agains them. 
-TourSchema.virtual('durationWeeks').get(function () {
+tourSchema.virtual('durationWeeks').get(function () {
     return this.duration / 7;
 })
 
+// DOCUMENT MIDDLEWARE: runs before .save() and .create()
+tourSchema.pre('save', function (next) {
+    this.slug = slugify(this.name, { lower: true });
+    next();
+})
 
-const Tour = model('Tour', TourSchema)
+// tourSchema.pre('save', function (next) {
+//     console.log('Will save document'...);
+//     next();
+// })
+
+
+// tourSchema.post('save', function (doc, next) {
+//     console.log(doc);
+//     next();
+// })
+
+
+const Tour = model('Tour', tourSchema)
 module.exports = Tour;
