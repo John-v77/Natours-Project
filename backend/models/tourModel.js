@@ -1,11 +1,19 @@
 const { Schema, model } = require('mongoose');
-const slugify = require('slugify')
+const slugify = require('slugify');
+const validator = require('validator');
+
 
 const tourSchema = new Schema({
     name: {
         type: String,
         required: [true, 'Add a name for Tours'],
-        unique: true
+        unique: true,
+        maxlength: [40, 'A tour name must have less or equal then 40 characters'],
+        minlength: [10, 'A tour name must have less or equal then 10 characters'],
+        validate: function (strName) {
+            return validator.isAlpha(strName, 'en-US', { ignore: ' ' });
+        },
+        message: 'Tour name must only contain characters and spaces'
     },
     slug: String,
     duration: {
@@ -19,10 +27,16 @@ const tourSchema = new Schema({
     difficulty: {
         type: String,
         required: [true, 'a tour must have a dificulty'],
+        enum: {
+            values: ['easy', 'medium', 'difficult'],
+            message: 'Difficulty is either: easy, medium, difficult'
+        }
     },
     ratingsAverate: {
         type: Number,
-        default: 4.5
+        default: 4.5,
+        min: [1, 'Rating must be above 1.0'],
+        max: [5, 'Rating must be below 5.0']
     },
     ratingQuantity: {
         type: Number,
@@ -32,7 +46,15 @@ const tourSchema = new Schema({
         type: Number,
         required: [true, 'Add price for tour package'],
     },
-    priceDiscount: Number,
+    priceDiscount: {
+        type: Number,
+        validate: function (val) {
+            // Important!
+            // this only points to current doc on NEW document creation
+            return val < this.price;
+        },
+        message: 'Discount price ({VALUE}) should be below regular price'
+    },
     summary: {
         type: String,
         trim: true,
@@ -69,6 +91,8 @@ tourSchema.virtual('durationWeeks').get(function () {
     return this.duration / 7;
 })
 
+
+// Important!
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
 tourSchema.pre('save', function (next) {
     this.slug = slugify(this.name, { lower: true });
