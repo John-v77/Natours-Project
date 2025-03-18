@@ -5,11 +5,12 @@
   "main": "app.js",
   "scripts": {
     "test": "test",
-    "start:prod":"NODE_ENV=production nodemon server.js"
+    "start:prod": "NODE_ENV=production nodemon server.js"
   },
   "author": "John Vasile",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
