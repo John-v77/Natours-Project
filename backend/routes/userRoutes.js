@@ -9,7 +9,8 @@ router.post('/login', authController.login);
 
 router
     .route('/')
-    .get(userController.getAllUsers);
+    .get(userController.getAllUsers)
+    .delete(userController.deleteAllUsers) // remove this route after development
 
 
 router

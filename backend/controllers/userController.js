@@ -15,8 +15,19 @@ const getAllUsers = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
-        results: tours.length,
+        results: users.length,
         data: { users }
+    })
+})
+
+// remove this controller after development
+const deleteAllUsers = catchAsync(async (req, res, next) => {
+    const users = await User.deleteMany()
+
+    res.status(204).json({
+        status: 'success',
+        results: users.length,
+        message: 'users have been deleted'
     })
 })
 
@@ -45,5 +56,6 @@ module.exports = {
     getAllUsers,
     getUserById,
     updateUser,
-    deleteUser
+    deleteUser,
+    deleteAllUsers
 }
