@@ -31,12 +31,8 @@ const userSchema = new Schema({
       },
       message: 'Passwords are not the same!'
     },
-  },
+  }
 })
-
-userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
-  return await bcrypt.compare(candidatePassword, userPassword)
-}
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
@@ -45,6 +41,10 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
   next();
 })
+
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+  return await bcrypt.compare(candidatePassword, userPassword)
+}
 
 const User = model('User', userSchema);
 

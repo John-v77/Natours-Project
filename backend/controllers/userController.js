@@ -1,3 +1,7 @@
+const User = require('../models/userModel')
+const catchAsync = require('./../utils/catchAsync');
+
+
 const fs = require('fs');
 
 const users = JSON.parse(
@@ -6,10 +10,15 @@ const users = JSON.parse(
 
 
 // Bulk actions
-const getAllUsers = (req, res) => {
-    console.log(req.params)
-    res.status(200).send(users);
-}
+const getAllUsers = catchAsync(async (req, res, next) => {
+    const users = await User.find()
+
+    res.status(200).json({
+        status: 'success',
+        results: tours.length,
+        data: { users }
+    })
+})
 
 
 // Sigle Item controlers
