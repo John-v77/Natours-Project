@@ -4,7 +4,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const AppError = require('./utils/appError')
-const GlobalErrorHandler = require('./utils/errorController')
+const GlobalErrorHandler = require('./controllers/errorController')
 
 const tourRouter = require('./routes/tourRoutes')
 const userRouter = require('./routes/userRoutes')
@@ -17,6 +17,7 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+  console.log(req.headers)
   next();
 })
 
