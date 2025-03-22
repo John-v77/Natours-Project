@@ -5,11 +5,13 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
 const { promisify } = require('util');
 
+
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 }
+
 
 const signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
@@ -21,6 +23,7 @@ const signup = catchAsync(async (req, res, next) => {
 
   const token = await signToken(newUser._id);
 
+
   res.status(201).json({
     status: 'success',
     token,
@@ -31,6 +34,10 @@ const signup = catchAsync(async (req, res, next) => {
 
 })
 
+
+
+/////////////////////// 
+// 1) Login Controller
 const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -54,6 +61,10 @@ const login = catchAsync(async (req, res, next) => {
   })
 })
 
+
+
+//////////////////////// 
+// 2) Protect Controller
 const protect = catchAsync(async (req, res, next) => {
   // 1) get token and check if it is there
   let token;
@@ -73,6 +84,7 @@ const protect = catchAsync(async (req, res, next) => {
   // 2) verify token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
+
   // 3) Check if user still exists
   const freshUser = await User.findById(decoded.id);
   if (!freshUser) {
@@ -84,7 +96,7 @@ const protect = catchAsync(async (req, res, next) => {
   }
 
   // 4) Check if user changed password after the token was issued
-  if (freshUser.chagedPasswordAfter(decoded.iat)) {
+  if (freshUser.changedPasswordAfter(decoded.iat)) {
     return next(
       new AppError('password recently changed! Please login in again.', 401)
     );
@@ -93,6 +105,8 @@ const protect = catchAsync(async (req, res, next) => {
   req.user = freshUser
   next();
 })
+
+
 
 module.exports = {
   signup,
