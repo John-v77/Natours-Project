@@ -4,6 +4,7 @@ const User = require('./../models/userModel')
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
 const { promisify } = require('util');
+const colors = require('colors');
 
 
 const signToken = (id) => {
@@ -18,6 +19,7 @@ const signup = catchAsync(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
+    role: req.body.role,
     passwordConfirm: req.body.passwordConfirm
   });
 
@@ -107,9 +109,22 @@ const protect = catchAsync(async (req, res, next) => {
 })
 
 
+//////////////////////// 
+// 2) RestrictTo Controller
+
+const restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError('You do not have permission to perform this action', 403))
+    }
+
+    next();
+  }
+}
 
 module.exports = {
   signup,
   login,
-  protect
+  protect,
+  restrictTo
 }
