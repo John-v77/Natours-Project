@@ -3,6 +3,8 @@
 const express = require('express');
 const morgan = require('morgan');
 
+const rateLimit = require('express-rate-limit');
+
 const AppError = require('./utils/appError')
 const GlobalErrorHandler = require('./controllers/errorController')
 
@@ -12,7 +14,20 @@ const userRouter = require('./routes/userRoutes')
 const app = express();
 
 
-app.use(morgan('dev'))
+// Global Middleware
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'))
+}
+
+
+const globalLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  max: 100, // Max 100 attempts
+  message: 'Too many login attempts, please try again after an hour',
+});
+
+app.use('/api', globalLimiter);
+
 app.use(express.json());
 
 app.use((req, res, next) => {
