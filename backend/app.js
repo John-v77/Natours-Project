@@ -4,17 +4,25 @@ const express = require('express');
 const morgan = require('morgan');
 
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet')
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean')
+const hpp = require('hpp')
 
 const AppError = require('./utils/appError')
 const GlobalErrorHandler = require('./controllers/errorController')
 
 const tourRouter = require('./routes/tourRoutes')
-const userRouter = require('./routes/userRoutes')
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
 
 // Global Middleware
+
+app.use(helmet())
+
+
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
@@ -28,8 +36,35 @@ const globalLimiter = rateLimit({
 
 app.use('/api', globalLimiter);
 
-app.use(express.json());
 
+// Body parser, reading data from body into req.body
+app.use(express.json({ limit: '10kb' }));
+
+// Serves static files
+app.use(express.static(`{__dirname}/public`));
+
+
+// Data satitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(xss());
+
+// Prevents parameter polution
+app.use(hpp(
+  {
+    whitelist: [
+      'duration',
+      'ratingAverate',
+      'ratingQuantity',
+      'maxGroupSize',
+      'difficulty',
+      'price'
+    ]
+  }
+));
+
+// Test Middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   console.log(req.headers)
