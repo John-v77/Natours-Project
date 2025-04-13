@@ -152,7 +152,11 @@ tourSchema.pre(/^find/, function (next) {
     next();
 })
 
-
+tourSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'tour',
+    localField: '_id'
+})
 
 tourSchema.pre(/^find/, function (next) {
     console.log('populating'.bgMagenta)
