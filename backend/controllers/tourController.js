@@ -2,6 +2,8 @@ const Tour = require('../models/tourModel');
 const catchAsync = require('./../utils/catchAsync')
 const APIFeatures = require('../utils/apiFeatures')
 const AppError = require('../utils/appError');
+const factory = require('../controllers/handlerFactory')
+
 // Need to write documentation on api
 
 
@@ -71,16 +73,6 @@ const updateTourPackage = catchAsync(async (req, res, next) => {
         status: 'success',
         data: { tour: updatedTour }
     })
-})
-
-
-const deleteTourPackage = catchAsync(async (req, res) => {
-    await Tour.findByIdAndRemove(req.params.id)
-
-    res.status(204).json({
-        status: 'success',
-        data: null
-    });
 })
 
 
@@ -155,6 +147,10 @@ const getMonthlyPlan = catchAsync(async (req, res, next) => {
         data: { plan }
     })
 })
+
+console.log(factory, "factory".red)
+
+const deleteTourPackage = factory.deleteOne(Tour);
 
 
 module.exports = {
