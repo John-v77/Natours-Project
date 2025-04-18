@@ -39,16 +39,6 @@ const getAllTours = catchAsync(async (req, res, next) => {
 })
 
 // Sigle Item controlers
-const createTour = catchAsync(async (req, res, next) => {
-    const newTour = await Tour.create(req.body);
-    res.status(201).json({
-        status: 'success',
-        data: {
-            tour: newTour
-        }
-    });
-});
-
 const getTourById = catchAsync(async (req, res, next) => {
     const searchedTour = await Tour.findById(req.params.id).populate('reviews');
 
@@ -61,19 +51,6 @@ const getTourById = catchAsync(async (req, res, next) => {
     })
 
 });
-
-
-const updateTourPackage = catchAsync(async (req, res, next) => {
-    const updatedTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    })
-
-    res.status(200).json({
-        status: 'success',
-        data: { tour: updatedTour }
-    })
-})
 
 
 const getTourStats = catchAsync(async (req, res, next) => {
@@ -148,8 +125,8 @@ const getMonthlyPlan = catchAsync(async (req, res, next) => {
     })
 })
 
-console.log(factory, "factory".red)
-
+const createTour = factory.createOne(Tour);
+const updateTourPackage = factory.updateOne(Tour);
 const deleteTourPackage = factory.deleteOne(Tour);
 
 
