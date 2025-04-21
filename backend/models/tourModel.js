@@ -115,6 +115,11 @@ const tourSchema = new Schema({
         toObject: { virtuals: true }
     });
 
+
+tourSchema.index({ price: 1, ratingsAverate: -1 });
+tourSchema.index({ slug: 1 });
+
+
 // Virtual fields - cannot query agains them. 
 tourSchema.virtual('durationWeeks').get(function () {
     return this.duration / 7;
