@@ -22,37 +22,8 @@ const aliasTopTours = (req, res, next) => {
     }
 }
 
-const getAllTours = catchAsync(async (req, res, next) => {
-    const features = new APIFeatures(Tour.find(), req.query)
-        .filter()
-        .sort()
-        .paginate();
-
-    const tours = await features.query
-
-    res.status(200).json({
-        status: 'success',
-        results: tours.length,
-        data: { tours }
-    })
-
-})
 
 // Sigle Item controlers
-const getTourById = catchAsync(async (req, res, next) => {
-    const searchedTour = await Tour.findById(req.params.id).populate('reviews');
-
-    if (!searchedTour) {
-        return next(new AppError('No tour found with that ID', 404))
-    }
-    res.status(200).json({
-        status: 'success',
-        data: { tour: searchedTour }
-    })
-
-});
-
-
 const getTourStats = catchAsync(async (req, res, next) => {
     const stats = await Tour.aggregate([
         // {
@@ -125,6 +96,8 @@ const getMonthlyPlan = catchAsync(async (req, res, next) => {
     })
 })
 
+const getAllTours = factory.getAll(Tour);
+const getTourById = factory.getOne(Tour, { path: 'reviews' });
 const createTour = factory.createOne(Tour);
 const updateTourPackage = factory.updateOne(Tour);
 const deleteTourPackage = factory.deleteOne(Tour);
