@@ -3,24 +3,31 @@ const router = express.Router();
 
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
-
 const loginLimiter = require('../utils/rateLimiter')
+
+
+
+
 
 router.post('/signup', authController.signup);
 router.post('/login', loginLimiter, authController.login);
+router.post('/forgotPassword', authController.forgotPassword);
+router.patch('/resetPassword/:token', authController.resetPassword);
 
+// Protect all routes after this middleware
+router.use(authController.protect);
 
+router.patch('/updateMyPassword', authController.protect, authController.updatePassword);
+router.patch('/updateMyInfo', authController.protect, userController.updateUser);
+router.delete('/deleteMe', authController.protect, userController.deleteUser);
 router.get('/me',
     authController.protect,
     userController.getMe,
     userController.getUserById
 );
 
-router.post('/forgotPassword', authController.forgotPassword);
-router.patch('/resetPassword/:token', authController.resetPassword);
-router.patch('/updateMyPassword', authController.protect, authController.updatePassword);
-router.patch('/updateMyInfo', authController.protect, userController.updateUser);
-router.delete('/deleteMe', authController.protect, userController.deleteUser);
+
+router.use(authController.restrictTo('admin'));
 
 router
     .route('/')
