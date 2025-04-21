@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('./../utils/catchAsync');
+const factory = require('./handlerFactory')
 
 
 const filterObj = (obj, ...allowedFields) => {
@@ -36,9 +37,11 @@ const deleteAllUsers = catchAsync(async (req, res, next) => {
 
 
 // Sigle Item controlers
-const getUserById = (req, res) => {
-    console.log(req.params)
-    res.status(200).send('get User by ID');
+const getUserById = factory.getOne(User)
+
+const getMe = (req, res, next) => {
+    req.params.id = req.user.id;
+    next();
 }
 
 
@@ -56,7 +59,7 @@ const updateUser = catchAsync(async (req, res, next) => {
     filteredBody = filterObj(req.body, 'name', 'email');
 
     // Update user document
-    updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
         new: true,
         runValidators: true
     })
@@ -87,5 +90,6 @@ module.exports = {
     getUserById,
     updateUser,
     deleteUser,
-    deleteAllUsers
+    deleteAllUsers,
+    getMe
 }
