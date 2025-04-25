@@ -11,8 +11,8 @@ const factory = require('../controllers/handlerFactory')
 const aliasTopTours = (req, res, next) => {
     try {
         req.query.limit = '5';
-        req.query.sort = '-ratingsAverate, price';
-        req.query.fields = 'name, price, ratingsAverate, summary, difficulty';
+        req.query.sort = '-ratingsAverage, price';
+        req.query.fields = 'name, price, ratingsAverage, summary, difficulty';
         next()
     } catch (err) {
         res.status(404).json({
@@ -33,7 +33,7 @@ const getTourStats = catchAsync(async (req, res, next) => {
             $group: {
                 _id: { $toUpper: '$difficulty' },
                 num: { $sum: 1 },
-                numRatings: { $sum: '$ratingQuantity' },
+                numRatings: { $sum: '$ratingsQuantity' },
                 avgRating: { $avg: '$ratingsAverage' },
                 avgPrice: { $avg: '$price' },
                 minPrice: { $min: '$price' },

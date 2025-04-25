@@ -211,8 +211,6 @@ const resetPassword = catchAsync(async (req, res, next) => {
 
 const updatePassword = catchAsync(async (req, res, next) => {
 
-
-  console.log('updating'.bgred)
   // Get user from colection
   const user = await User.findById(req.user._id).select('+password');
 
@@ -231,7 +229,6 @@ const updatePassword = catchAsync(async (req, res, next) => {
   createSendTaken(user, 200, res);
 
 })
-
 
 module.exports = {
   signup,
