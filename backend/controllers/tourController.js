@@ -25,7 +25,6 @@ const aliasTopTours = (req, res, next) => {
 
 const getToursWithin = catchAsync(async (req, res, next) => {
 
-    console.log("tours within".bgRed)
     const { distance, latlng, unit } = req.params;
     const [lat, lng] = latlng.split(',');
 

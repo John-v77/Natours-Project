@@ -63,14 +63,12 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
       }
     }
   ]);
-  console.log(stats, 'Stats'.bgCyan)
-  if (stats.length > 0) {
 
+  if (stats.length > 0) {
     const updatedTour = await Tour.findByIdAndUpdate(tourId, {
       ratingsQuantity: stats[0].nRating,
       ratingsAverage: stats[0].avgRating
     });
-    console.log(updatedTour, 'Stats'.bgRed)
   } else {
     await Tour.findByIdAndUpdate(tourId, {
       ratingsQuantity: 0,
@@ -94,7 +92,6 @@ reviewSchema.post('save', function () {
 
 reviewSchema.pre(/^findOneAnd/, async function (next) {
   this.docZ = await this.findOne();
-  console.log(docZ)
   next();
 })
 
