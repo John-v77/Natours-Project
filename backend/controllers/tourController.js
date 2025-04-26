@@ -23,6 +23,40 @@ const aliasTopTours = (req, res, next) => {
 }
 
 
+const getToursWithin = catchAsync(async (req, res, next) => {
+
+    console.log("tours within".bgRed)
+    const { distance, latlng, unit } = req.params;
+    const [lat, lng] = latlng.split(',');
+
+    const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+
+
+
+    if (!lat || !lng) {
+        next(
+            new AppError(
+                'Please provide latitude and longitude in the format lat,lng.',
+                400
+            )
+        );
+    }
+
+    const tours = await Tour.find({
+        startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }
+    });
+
+    res.status(200).json({
+        status: 'success',
+        results: tours.length,
+        data: { data: tours }
+    });
+
+    // /tours-within?distance=233&center=-40,45&unit=mi
+    // /tours-within/233/center/-40,45/unit/mi
+});
+
+
 // Sigle Item controlers
 const getTourStats = catchAsync(async (req, res, next) => {
     const stats = await Tour.aggregate([
@@ -111,5 +145,6 @@ module.exports = {
     deleteTourPackage,
     aliasTopTours,
     getTourStats,
-    getMonthlyPlan
+    getMonthlyPlan,
+    getToursWithin
 }

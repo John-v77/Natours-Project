@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const slugify = require('slugify');
 const validator = require('validator');
-const User = require('./userModel')
+
 
 const tourSchema = new Schema({
     name: {
@@ -36,7 +36,8 @@ const tourSchema = new Schema({
         type: Number,
         default: 4.5,
         min: [1, 'Rating must be above 1.0'],
-        max: [5, 'Rating must be below 5.0']
+        max: [5, 'Rating must be below 5.0'],
+        set: val => Math.round(val * 100) / 100
     },
     ratingsQuantity: {
         type: Number,
@@ -118,6 +119,7 @@ const tourSchema = new Schema({
 
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: '2dsphere' });
 
 
 // Virtual fields - cannot query agains them. 
