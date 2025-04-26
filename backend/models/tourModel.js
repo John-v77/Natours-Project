@@ -176,9 +176,14 @@ tourSchema.pre(/^find/, function (next) {
 
 
 tourSchema.pre('aggregate', function (next) {
-    this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-    console.log(this.pipeline());
-    next();
+
+    const firstStage = this.pipeline()?.[0]
+    if (!firstStage?.$geoNear) {
+        // If the first stage is $geoNear, don't add $match before it
+        this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+        console.log(this.pipeline());
+    }
+    return next();
 });
 
 
