@@ -24,10 +24,12 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, './views'))
 
+// Serves static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Global Middleware
 
-app.use(helmet())
 
 // Customize Helmet's Content Security Policy
 app.use(
@@ -59,8 +61,7 @@ app.use('/api', globalLimiter);
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 
-// Serves static files
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 
 // Data satitization against NoSQL query injection
