@@ -29,6 +29,18 @@ app.set('views', path.join(__dirname, './views'))
 
 app.use(helmet())
 
+// Customize Helmet's Content Security Policy
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "script-src": ["'self'"], // Allow scripts from same origin
+      // Optional: Allow scripts from specific external domains or add hashes
+      "script-src": ["'self'", "'unsafe-inline'", "'sha256-...'", "https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js"],
+      "script-src": ["'self'", "'unsafe-inline'", "'sha256-...'", "https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css"],
+    },
+  })
+);
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))

@@ -18,10 +18,12 @@ const getTour = catchAsync(async (req, res, next) => {
     path: 'reviews',
     fields: 'review rating user'
   })
-  res.status(200).render('tour', {
-    title: `${tour.name} Tour`,
-    tour: tour
-  })
+  res.status(200)
+    .set('Content-Security-Policy', "frame-src 'self'")
+    .render('tour', {
+      title: `${tour.name} Tour`,
+      tour: tour
+    })
 })
 
 module.exports = {
