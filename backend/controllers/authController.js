@@ -86,7 +86,10 @@ const protect = catchAsync(async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(' ')[1];
 
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
+
   if (!token) {
     return next(
       new AppError('You are not logged in!')
@@ -122,7 +125,6 @@ const protect = catchAsync(async (req, res, next) => {
 
 /////////////////////////// 
 // 3) RestrictTo Controller
-
 const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
@@ -135,9 +137,38 @@ const restrictTo = (...roles) => {
 
 
 
+const isLoggedIn = async (req, res, next) => {
+  if (req.cookies.jwt) {
+    try {
+      // 1) verify token
+      const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+
+      // 2) Check if user still exists
+      const freshUser = await User.findById(decoded.id);
+      if (!freshUser) {
+        return next();
+      }
+
+      // 3) Check if user changed password after the token was issued
+      if (freshUser.changedPasswordAfter(decoded.iat)) {
+        return next();
+      }
+
+      // There is a logged in user
+      res.locals.user = freshUser;
+      return next();
+    } catch (err) {
+      return next();
+    }
+  }
+  next();
+}
+
+
+
+
 ///////////////////////////////
 // 4) ForgotPassword Controller
-
 const forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on POST email
   const user = await User.findOne({ email: req.body.email })
@@ -237,5 +268,6 @@ module.exports = {
   restrictTo,
   forgotPassword,
   resetPassword,
-  updatePassword
+  updatePassword,
+  isLoggedIn
 }
