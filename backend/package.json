@@ -6,8 +6,8 @@
   "scripts": {
     "test": "test",
     "start:prod": "NODE_ENV=production nodemon server.js",
-    "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
-    "build:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
+    "watch:js": "npx esbuild public/js/index.js --bundle --outfile=public/js/bundle.js --format=iife  --target=es6"
+  
   },
   "author": "John Vasile",
   "license": "ISC",
@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "colors": "^1.4.0",
-    "parcel-bundler": "^1.12.5"
+    "parcel-bundler": "^1.12.3"
   }
 }

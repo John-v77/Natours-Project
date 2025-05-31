@@ -1,7 +1,7 @@
 /* eslint-disable */
 console.log("you are on the login page")
 
-// import axios from 'axios';
+import axios from 'axios';
 // import { showAlert } from './alerts';
 
 
@@ -27,9 +27,10 @@ const login = async (email, password) => {
 
   } catch (err) {
     // showAlert('error');
-    console.log(err.response.data.message);
+    console.log(err);
   }
 };
+
 
 document.querySelector('.form').addEventListener('submit', e => {
   e.preventDefault();
@@ -38,3 +39,5 @@ document.querySelector('.form').addEventListener('submit', e => {
   login(email, password);
 }
 );
+
+
