@@ -8,7 +8,6 @@ const mapBox = document.getElementById('map');
 
 const loginForm = document.querySelector('.form');
 const logOutBtn = document.querySelector('.nav__el--logout');
-console.log(logOutBtn);
 
 
 
@@ -29,10 +28,5 @@ if (loginForm) {
 }
 
 if (logOutBtn) { logOutBtn.addEventListener('click', logout) };
-
-// document.querySelector('.form').addEventListener('submit', e => {
-//   e.preventDefault();
-//   login(email, password);
-// });
 
 

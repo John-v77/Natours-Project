@@ -31,11 +31,29 @@ const login = async (email, password) => {
   }
 };
 
+const logout = async () => {
 
-document.querySelector('.form').addEventListener('submit', e => {
-  e.preventDefault();
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  login(email, password);
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: 'http://127.0.0.1:3000/api/v1/users/logout',
+    })
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'Logged out successfully!');
+      location.reload(true);
+      window.setTimeout(() => {
+        location.assign('/');
+      }, 1000);
+    }
+  } catch (err) {
+    console.log(err);
+    showAlert('error', 'Error logging out! Try again.');
+  }
 }
-);
+
+
+module.exports = {
+  login,
+  logout
+}

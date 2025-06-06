@@ -10845,10 +10845,31 @@
     }
   });
 
+  // public/js/alerts.js
+  var hideAlert, showAlert;
+  var init_alerts = __esm({
+    "public/js/alerts.js"() {
+      hideAlert = () => {
+        const el = document.querySelector(".alert");
+        if (el) {
+          el.parentElement.removeChild(el);
+        }
+        ;
+      };
+      showAlert = (type, msg) => {
+        hideAlert();
+        const markup = `<div class="alert alert--${type}">${msg}</div>`;
+        document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
+        window.setTimeout(hideAlert, 5e3);
+      };
+    }
+  });
+
   // public/js/login.js
   var require_login = __commonJS({
-    "public/js/login.js"(exports) {
+    "public/js/login.js"(exports, module) {
       init_axios2();
+      init_alerts();
       console.log("you are on the login page");
       var login2 = (email, password) => __async(null, null, function* () {
         try {
@@ -10862,24 +10883,38 @@
           });
           console.log(res, "maxxy");
           if (res.data.status === "success") {
-            alert("success, Logged in successfully!");
+            showAlert("success", "Logged in successfully!");
             window.setTimeout(() => {
               location.assign("/");
             }, 1500);
           }
         } catch (err) {
+          showAlert("error", err.response.data.message);
           console.log(err);
         }
       });
-      document.querySelector(".form").addEventListener(
-        "submit",
-        (e) => {
-          e.preventDefault();
-          const email = document.getElementById("email").value;
-          const password = document.getElementById("password").value;
-          login2(email, password);
+      var logout2 = () => __async(null, null, function* () {
+        try {
+          const res = yield axios_default({
+            method: "GET",
+            url: "http://127.0.0.1:3000/api/v1/users/logout"
+          });
+          if (res.data.status === "success") {
+            showAlert("success", "Logged out successfully!");
+            location.reload(true);
+            window.setTimeout(() => {
+              location.assign("/");
+            }, 1e3);
+          }
+        } catch (err) {
+          console.log(err);
+          showAlert("error", "Error logging out! Try again.");
         }
-      );
+      });
+      module.exports = {
+        login: login2,
+        logout: logout2
+      };
     }
   });
 
@@ -41788,7 +41823,6 @@ ${o2.vertexSource}`, this.forceManualRenderingForInstanceIDShaders && (_2 = _2.r
   var mapBox = document.getElementById("map");
   var loginForm = document.querySelector(".form");
   var logOutBtn = document.querySelector(".nav__el--logout");
-  console.log(logOutBtn);
   if (mapBox) {
     const locations = JSON.parse(mapBox.dataset.locations);
     console.log(locations, "locations");

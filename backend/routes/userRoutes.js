@@ -6,10 +6,8 @@ const authController = require('../controllers/authController');
 const loginLimiter = require('../utils/rateLimiter')
 
 
-
-
-
 router.post('/signup', authController.signup);
+router.get('/logout', loginLimiter, authController.logout);
 router.post('/login', loginLimiter, authController.login);
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
