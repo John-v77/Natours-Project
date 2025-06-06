@@ -2,7 +2,7 @@
 console.log("you are on the login page")
 
 import axios from 'axios';
-// import { showAlert } from './alerts';
+import { showAlert } from './alerts';
 
 
 const login = async (email, password) => {
@@ -19,14 +19,14 @@ const login = async (email, password) => {
     console.log(res, "maxxy");
 
     if (res.data.status === 'success') {
-      alert('success, Logged in successfully!');
+      showAlert('success', 'Logged in successfully!');
       window.setTimeout(() => {
         location.assign('/');
       }, 1500);
     }
 
   } catch (err) {
-    // showAlert('error');
+    showAlert('error', err.response.data.message);
     console.log(err);
   }
 };
@@ -39,5 +39,3 @@ document.querySelector('.form').addEventListener('submit', e => {
   login(email, password);
 }
 );
-
-
