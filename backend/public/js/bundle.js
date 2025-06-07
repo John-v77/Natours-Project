@@ -10870,7 +10870,6 @@
     "public/js/login.js"(exports, module) {
       init_axios2();
       init_alerts();
-      console.log("you are on the login page");
       var login2 = (email, password) => __async(null, null, function* () {
         try {
           const res = yield axios_default({
@@ -41819,7 +41818,6 @@ ${o2.vertexSource}`, this.forceManualRenderingForInstanceIDShaders && (_2 = _2.r
   });
 
   // public/js/index.js
-  console.log("Hello from parcel21");
   var mapBox = document.getElementById("map");
   var loginForm = document.querySelector(".form");
   var logOutBtn = document.querySelector(".nav__el--logout");

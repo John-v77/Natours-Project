@@ -1,6 +1,4 @@
 /* eslint-disable */
-console.log("you are on the login page")
-
 import axios from 'axios';
 import { showAlert } from './alerts';
 

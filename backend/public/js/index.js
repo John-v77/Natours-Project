@@ -1,4 +1,3 @@
-console.log('Hello from parcel21')
 import '@babel/polyfill';
 import { login, logout } from "./login";
 import { displayMap } from './mapbox';
