@@ -44,8 +44,20 @@ const getLoginForm = catchAsync(async (req, res) => {
     })
 })
 
+
+
+const getAccount = catchAsync(async (req, res) => {
+  res.status(200)
+    .set('Content-Security-Policy', "frame-src 'self'")
+    .render('account', {
+      title: `Your account`,
+    })
+}
+)
+
 module.exports = {
   getOverview,
   getTour,
-  getLoginForm
+  getLoginForm,
+  getAccount
 }
