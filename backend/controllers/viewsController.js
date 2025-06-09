@@ -1,6 +1,7 @@
 const Tour = require("../models/tourModel")
 const catchAsync = require("../utils/catchAsync")
-const AppError = require("../utils/appError")
+const AppError = require("../utils/appError");
+const User = require("../models/userModel");
 
 const getOverview = catchAsync(async (req, res, next) => {
   // Get tour data from colection
@@ -32,8 +33,8 @@ const getTour = catchAsync(async (req, res, next) => {
     .render('tour', {
       title: `${tour.name} Tour`,
       tour: tour
-    })
-})
+    });
+});
 
 
 const getLoginForm = catchAsync(async (req, res) => {
@@ -41,8 +42,8 @@ const getLoginForm = catchAsync(async (req, res) => {
     .set('Content-Security-Policy', "frame-src 'self'")
     .render('login', {
       title: `Login into your account`,
-    })
-})
+    });
+});
 
 
 
@@ -51,13 +52,31 @@ const getAccount = catchAsync(async (req, res) => {
     .set('Content-Security-Policy', "frame-src 'self'")
     .render('account', {
       title: `Your account`,
-    })
-}
-)
+    });
+});
+
+const updateUserData = catchAsync(async (req, res, next) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      name: req.body.name,
+      email: req.body.email
+    },
+    {
+      new: true,
+      runValidators: true
+    });
+
+  res.status(200).render('account', {
+    title: 'Your account',
+    user: updatedUser
+  });
+});
 
 module.exports = {
   getOverview,
   getTour,
   getLoginForm,
-  getAccount
+  getAccount,
+  updateUserData
 }

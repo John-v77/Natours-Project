@@ -7944,6 +7944,23 @@
     }
   });
 
+  // node_modules/@babel/polyfill/lib/index.js
+  function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { "default": obj };
+  }
+  var _global;
+  var init_lib = __esm({
+    "node_modules/@babel/polyfill/lib/index.js"() {
+      "use strict";
+      require_noConflict();
+      _global = _interopRequireDefault(require_global3());
+      if (_global["default"]._babelPolyfill && typeof console !== "undefined" && console.warn) {
+        console.warn("@babel/polyfill is loaded more than once on this page. This is probably not desirable/intended and may have consequences if different versions of the polyfills are applied sequentially. If you do need to load the polyfill more than once, use @babel/polyfill/noConflict instead to bypass the warning.");
+      }
+      _global["default"]._babelPolyfill = true;
+    }
+  });
+
   // node_modules/axios/lib/helpers/bind.js
   function bind(fn, thisArg) {
     return function wrap() {
@@ -10870,7 +10887,7 @@
     "public/js/login.js"(exports, module) {
       init_axios2();
       init_alerts();
-      var login2 = (email, password) => __async(null, null, function* () {
+      var login = (email, password) => __async(null, null, function* () {
         try {
           const res = yield axios_default({
             method: "POST",
@@ -10892,7 +10909,7 @@
           console.log(err);
         }
       });
-      var logout2 = () => __async(null, null, function* () {
+      var logout = () => __async(null, null, function* () {
         try {
           const res = yield axios_default({
             method: "GET",
@@ -10911,8 +10928,8 @@
         }
       });
       module.exports = {
-        login: login2,
-        logout: logout2
+        login,
+        logout
       };
     }
   });
@@ -41768,75 +41785,130 @@ ${o2.vertexSource}`, this.forceManualRenderingForInstanceIDShaders && (_2 = _2.r
     }
   });
 
-  // node_modules/@babel/polyfill/lib/index.js
-  require_noConflict();
-  var _global = _interopRequireDefault(require_global3());
-  function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : { "default": obj };
-  }
-  if (_global["default"]._babelPolyfill && typeof console !== "undefined" && console.warn) {
-    console.warn("@babel/polyfill is loaded more than once on this page. This is probably not desirable/intended and may have consequences if different versions of the polyfills are applied sequentially. If you do need to load the polyfill more than once, use @babel/polyfill/noConflict instead to bypass the warning.");
-  }
-  _global["default"]._babelPolyfill = true;
-
-  // public/js/index.js
-  var import_login = __toESM(require_login());
+  // node_modules/mapbox-gl/dist/mapbox-gl.css
+  var init_mapbox_gl = __esm({
+    "node_modules/mapbox-gl/dist/mapbox-gl.css"() {
+    }
+  });
 
   // public/js/mapbox.js
-  var import_mapbox_gl = __toESM(require_mapbox_gl());
-  var displayMap = (locations) => __async(null, null, function* () {
-    import_mapbox_gl.default.accessToken = "pk.eyJ1Ijoiam9obnYxMSIsImEiOiJjbWFla2UzczAwOHJ3MmpvaXg0bzg4M3NjIn0.odMSbQahGQWcEHhEdoZlbA";
-    var map = new import_mapbox_gl.default.Map({
-      container: "map",
-      style: "mapbox://styles/johnv11/cmaelee6f00ar01s72bgzasdz",
-      // scrollZoom: false,
-      center: [-118.113491, 34.111745],
-      zoom: 7
-      // interactive: false
-    });
-    const bounds = new import_mapbox_gl.default.LngLatBounds();
-    yield locations.map((loc) => {
-      const el = document.createElement("div");
-      el.className = "marker";
-      new import_mapbox_gl.default.Marker({
-        element: el,
-        anchor: "bottom"
-      }).setLngLat(loc.coordinates).addTo(map);
-      new import_mapbox_gl.default.Popup({
-        offset: 30
-      }).setLngLat(loc.coordinates).setHTML(`<p>Day ${loc.day}: ${loc.description}</p>`).addTo(map);
-      bounds.extend(loc.coordinates);
-    });
-    map.fitBounds(bounds, {
-      padding: {
-        top: 200,
-        bottom: 150,
-        left: 100,
-        right: 100
-      }
-    });
+  var import_mapbox_gl, displayMap;
+  var init_mapbox = __esm({
+    "public/js/mapbox.js"() {
+      import_mapbox_gl = __toESM(require_mapbox_gl());
+      init_mapbox_gl();
+      displayMap = (locations) => __async(null, null, function* () {
+        import_mapbox_gl.default.accessToken = "pk.eyJ1Ijoiam9obnYxMSIsImEiOiJjbWFla2UzczAwOHJ3MmpvaXg0bzg4M3NjIn0.odMSbQahGQWcEHhEdoZlbA";
+        var map = new import_mapbox_gl.default.Map({
+          container: "map",
+          style: "mapbox://styles/johnv11/cmaelee6f00ar01s72bgzasdz",
+          // scrollZoom: false,
+          center: [-118.113491, 34.111745],
+          zoom: 7
+          // interactive: false
+        });
+        const bounds = new import_mapbox_gl.default.LngLatBounds();
+        yield locations.map((loc) => {
+          const el = document.createElement("div");
+          el.className = "marker";
+          new import_mapbox_gl.default.Marker({
+            element: el,
+            anchor: "bottom"
+          }).setLngLat(loc.coordinates).addTo(map);
+          new import_mapbox_gl.default.Popup({
+            offset: 30
+          }).setLngLat(loc.coordinates).setHTML(`<p>Day ${loc.day}: ${loc.description}</p>`).addTo(map);
+          bounds.extend(loc.coordinates);
+        });
+        map.fitBounds(bounds, {
+          padding: {
+            top: 200,
+            bottom: 150,
+            left: 100,
+            right: 100
+          }
+        });
+      });
+    }
+  });
+
+  // public/js/updateSettings.js
+  var updateSettings;
+  var init_updateSettings = __esm({
+    "public/js/updateSettings.js"() {
+      init_axios2();
+      init_alerts();
+      updateSettings = (data, type) => __async(null, null, function* () {
+        try {
+          const url = type === "password" ? "http://127.0.0.1:3000/api/v1/users/updateMyPassword" : "http://127.0.0.1:3000/api/v1/users/updateMe";
+          const res = yield axios_default({
+            method: "PATCH",
+            url,
+            data
+          });
+          if (res.data.status === "success") {
+            showAlert("success", `${type.toUpperCase()} updated successfully!`);
+          }
+        } catch (err) {
+          showAlert("error", err.response.data.message);
+        }
+      });
+    }
   });
 
   // public/js/index.js
-  var mapBox = document.getElementById("map");
-  var loginForm = document.querySelector(".form");
-  var logOutBtn = document.querySelector(".nav__el--logout");
-  if (mapBox) {
-    const locations = JSON.parse(mapBox.dataset.locations);
-    console.log(locations, "locations");
-    displayMap(locations);
-  }
-  if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      (0, import_login.login)(email, password);
-    });
-  }
-  if (logOutBtn) {
-    logOutBtn.addEventListener("click", import_login.logout);
-  }
+  var require_index = __commonJS({
+    "public/js/index.js"(exports) {
+      init_lib();
+      var import_login = __toESM(require_login());
+      init_mapbox();
+      init_updateSettings();
+      var mapBox = document.getElementById("map");
+      var loginForm = document.querySelector(".form");
+      var logOutBtn = document.querySelector(".nav__el--logout");
+      var userDataForm = document.querySelector(".form-user-data");
+      var userPasswordForm = document.querySelector(".form-user-password");
+      if (mapBox) {
+        const locations = JSON.parse(mapBox.dataset.locations);
+        console.log(locations, "locations");
+        displayMap(locations);
+      }
+      if (loginForm) {
+        loginForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          (0, import_login.login)(email, password);
+        });
+      }
+      if (logOutBtn) {
+        logOutBtn.addEventListener("click", import_login.logout);
+      }
+      if (userDataForm) {
+        userDataForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const name = document.getElementById("name").value;
+          const email = document.getElementById("email").value;
+          updateSettings({ name, email }, "data");
+        });
+      }
+      if (userPasswordForm) {
+        userPasswordForm.addEventListener("submit", (e) => __async(null, null, function* () {
+          e.preventDefault();
+          document.querySelector(".btn--save-password").textContent = "Updating...";
+          const passwordCurrent = document.getElementById("password-current").value;
+          const password = document.getElementById("password").value;
+          const passwordConfirm = document.getElementById("password-confirm").value;
+          yield updateSettings({ passwordCurrent, password, passwordConfirm }, "password");
+          document.querySelector(".btn--save-password").textContent = "Save password";
+          document.getElementById("password-current").value = "";
+          document.getElementById("password").value = "";
+          document.getElementById("password-confirm").value = "";
+        }));
+      }
+    }
+  });
+  require_index();
 })();
 /*! Bundled license information:
 
