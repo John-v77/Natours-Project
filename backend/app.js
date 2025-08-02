@@ -17,6 +17,7 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewsRoutes');
 const viewRouter = require('./routes/viewRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
 
 const path = require('path');
 
@@ -38,9 +39,12 @@ app.use(
     useDefaults: true,
     directives: {
       "script-src": ["'self'"], // Allow scripts from same origin
+
       // Optional: Allow scripts from specific external domains or add hashes
       "script-src": ["'self'", "'unsafe-inline'", "'sha256-...'", "https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js"],
       "script-src": ["'self'", "'unsafe-inline'", "'sha256-...'", "https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css"],
+      "script-src": ["'self'", "'unsafe-inline'", "'sha256-...'", "https://js.stripe.com/"],
+
     },
   })
 );
@@ -88,7 +92,7 @@ app.use(hpp(
 // Test Middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  console.log(req.headers)
+  // console.log(req.headers)
   next();
 })
 
@@ -98,6 +102,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
