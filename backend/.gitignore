@@ -39,3 +39,7 @@ node_modules
 # Env File
 config.env
 .env
+
+
+# parcel
+.cache/
