@@ -36,17 +36,6 @@ const getTour = catchAsync(async (req, res, next) => {
     });
 });
 
-
-const getLoginForm = catchAsync(async (req, res) => {
-  res.status(200)
-    .set('Content-Security-Policy', "frame-src 'self'")
-    .render('login', {
-      title: `Login into your account`,
-    });
-});
-
-
-
 const getAccount = catchAsync(async (req, res) => {
   res.status(200)
     .set('Content-Security-Policy', "frame-src 'self'")
@@ -73,10 +62,29 @@ const updateUserData = catchAsync(async (req, res, next) => {
   });
 });
 
+const getLoginForm = catchAsync(async (req, res) => {
+  res.status(200)
+    .set('Content-Security-Policy', "frame-src 'self'")
+    .render('login', {
+      title: `Login into your account`,
+    });
+});
+
+
+const getSignupForm = catchAsync(async (req, res) => {
+  res.status(200)
+    .set('Content-Security-Policy', "frame-src 'self'")
+    .render('signup', {
+      title: `Create your account`,
+    });
+});
+
+
 module.exports = {
   getOverview,
   getTour,
   getLoginForm,
   getAccount,
-  updateUserData
+  updateUserData,
+  getSignupForm
 }
