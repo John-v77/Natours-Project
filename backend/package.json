@@ -7,7 +7,10 @@
     "start": "node server.js",
     "start:prod": "NODE_ENV=production nodemon server.js",
     "watch:js": "npx esbuild public/js/index.js --bundle --outfile=public/js/bundle.js --format=iife  --target=es6",
-    "build:js": "npx esbuild public/js/index.js --bundle --outfile=public/js/bundle.js --format=iife  --target=es6 --minify --sourcemap"
+    "build:js": "npx esbuild public/js/index.js --bundle --outfile=public/js/bundle.js --format=iife  --target=es6 --minify --sourcemap",
+    "test": "NODE_ENV=test jest",
+    "test:watch": "NODE_ENV=test jest --watch",
+    "test:coverage": "NODE_ENV=test jest --coverage"
   },
   "author": "John Vasile",
   "license": "ISC",
@@ -40,7 +43,10 @@
   },
   "devDependencies": {
     "colors": "^1.4.0",
-    "parcel-bundler": "^1.12.3"
+    "jest": "^30.1.1",
+    "mongodb-memory-server": "^10.2.0",
+    "parcel-bundler": "^1.12.3",
+    "supertest": "^7.1.4"
   },
   "engines": {
     "node": ">=10.0.0"

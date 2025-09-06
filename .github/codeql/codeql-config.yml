@@ -1,0 +1,20 @@
+name: "Natours CodeQL Config"
+
+paths:
+  - backend/controllers
+  - backend/routes
+  - backend/models
+  - backend/utils
+  - backend/app.js
+  - backend/server.js
+
+paths-ignore:
+  - backend/node_modules
+  - backend/tests
+  - backend/dev-data
+  - backend/public
+  - "**/*.test.js"
+  - "**/*.spec.js"
+
+queries:
+  - security-and-quality

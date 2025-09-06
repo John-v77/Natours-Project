@@ -1,0 +1,198 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x, 20.x]
+
+    services:
+      mongodb:
+        image: mongo:5.0
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm ci
+
+    - name: Create test environment file
+      run: |
+        cd backend
+        echo "NODE_ENV=test" > .env.test
+        echo "DATABASE_URI=mongodb://localhost:27017/natours-test" >> .env.test
+        echo "JWT_SECRET=test-jwt-secret-key-for-testing-purposes-only" >> .env.test
+        echo "JWT_EXPIRES_IN=90d" >> .env.test
+
+    - name: Wait for MongoDB
+      run: |
+        until nc -z localhost 27017; do
+          echo "Waiting for MongoDB..."
+          sleep 1
+        done
+
+    - name: Run tests
+      run: |
+        cd backend
+        npm test
+      env:
+        NODE_ENV: test
+        DATABASE_URI: mongodb://localhost:27017/natours-test
+        JWT_SECRET: test-jwt-secret-key-for-testing-purposes-only
+        JWT_EXPIRES_IN: 90d
+
+    - name: Run tests with coverage
+      run: |
+        cd backend
+        npm run test:coverage
+      env:
+        NODE_ENV: test
+        DATABASE_URI: mongodb://localhost:27017/natours-test
+        JWT_SECRET: test-jwt-secret-key-for-testing-purposes-only
+        JWT_EXPIRES_IN: 90d
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./backend/coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+
+  security:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm ci
+
+    - name: Run security audit
+      run: |
+        cd backend
+        npm audit --audit-level high
+
+    - name: Check for vulnerabilities
+      run: |
+        cd backend
+        npx audit-ci --high
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18.x
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm ci
+
+    - name: Build application
+      run: |
+        cd backend
+        npm run build:js
+
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-files
+        path: |
+          backend/public/js/bundle.js
+          backend/public/js/bundle.js.map
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to staging
+      run: |
+        echo "🚀 Deploying to staging environment..."
+        # Add your staging deployment commands here
+        # Example: Deploy to Heroku, AWS, DigitalOcean, etc.
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to production
+      run: |
+        echo "🚀 Deploying to production environment..."
+        # Add your production deployment commands here
+        # Example: Deploy to Heroku, AWS, DigitalOcean, etc.
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [test, security, build]
+    if: always()
+
+    steps:
+    - name: Notify on success
+      if: success()
+      run: |
+        echo "✅ CI/CD Pipeline completed successfully!"
+        # Add notification logic (Slack, Discord, Email, etc.)
+
+    - name: Notify on failure
+      if: failure()
+      run: |
+        echo "❌ CI/CD Pipeline failed!"
+        # Add notification logic (Slack, Discord, Email, etc.)
