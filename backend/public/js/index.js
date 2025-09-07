@@ -11,8 +11,8 @@ const mapBox = document.getElementById('map');
 
 // DOM ELEMENTS
 
-const loginForm = document.querySelector('.form');
-const signupForm = document.querySelector('.form--signup');
+const loginForm = document.querySelector('.login--form');
+const signupForm = document.querySelector('.signup--form');
 const logOutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
