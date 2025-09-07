@@ -1,0 +1,44 @@
+extend base
+include _userMenu
+
+block content
+  main.main
+    .user-view
+      +userMenu('reviews')
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md My Reviews
+          
+          - if (reviews && reviews.length > 0)
+            each review in reviews
+              .review-card
+                .review-card__header
+                  h3.heading-tertiary= review.tour.name
+                  .review-card__date Reviewed: #{review.createdAt.toDateString()}
+                
+                .review-card__content
+                  .review-card__rating
+                    each star in [1, 2, 3, 4, 5]
+                      svg.reviews__star(class=`reviews__star--${review.rating >= star ? 'active' : 'inactive'}`)
+                        use(xlink:href='/img/icons.svg#icon-star')
+                    span.review-card__rating-value #{review.rating}/5
+                  
+                  .review-card__text
+                    p= review.review
+                  
+                  .review-card__tour-info
+                    .review-card__tour-image
+                      img(src=`/img/tours/${review.tour.imageCover}`, alt=`${review.tour.name}`)
+                    .review-card__tour-details
+                      p.review-card__tour-name= review.tour.name
+                      p.review-card__tour-duration #{review.tour.duration} days
+                
+                .review-card__actions
+                  a.btn.btn--small.btn--green(href=`/tour/${review.tour.slug}`) View Tour
+                  button.btn.btn--small.btn--blue Edit Review
+                  button.btn.btn--small.btn--red Delete Review
+          - else
+            .no-reviews
+              p.no-reviews__text You haven't written any reviews yet.
+              a.btn.btn--green(href='/') Browse Tours

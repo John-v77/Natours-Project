@@ -2,6 +2,8 @@ const Tour = require("../models/tourModel")
 const catchAsync = require("../utils/catchAsync")
 const AppError = require("../utils/appError");
 const User = require("../models/userModel");
+const Booking = require("../models/bookingModel");
+const Review = require("../models/reviewModel");
 
 const getOverview = catchAsync(async (req, res, next) => {
   // Get tour data from colection
@@ -79,6 +81,64 @@ const getSignupForm = catchAsync(async (req, res) => {
     });
 });
 
+const getMyBookings = catchAsync(async (req, res, next) => {
+  // 1) Find all bookings for the current user
+  const bookings = await Booking.find({ user: req.user.id }).populate({
+    path: 'tour',
+    select: 'name slug imageCover startDates duration difficulty'
+  });
+
+  res.status(200)
+    .set('Content-Security-Policy', "frame-src 'self'")
+    .render('my-bookings', {
+      title: 'My Bookings',
+      bookings
+    });
+});
+
+const getMyReviews = catchAsync(async (req, res, next) => {
+  // 1) Find all reviews for the current user
+  const reviews = await Review.find({ user: req.user.id }).populate({
+    path: 'tour',
+    select: 'name slug imageCover duration'
+  });
+
+  res.status(200)
+    .set('Content-Security-Policy', "frame-src 'self'")
+    .render('my-reviews', {
+      title: 'My Reviews',
+      reviews
+    });
+});
+
+const getSettings = catchAsync(async (req, res) => {
+  res.status(200)
+    .set('Content-Security-Policy', "frame-src 'self'")
+    .render('settings', {
+      title: 'Account Settings'
+    });
+});
+
+const getBilling = catchAsync(async (req, res) => {
+  // 1) Get user's bookings for payment history
+  const payments = await Booking.find({ user: req.user.id }).populate({
+    path: 'tour',
+    select: 'name'
+  });
+
+  // 2) Calculate totals
+  const totalSpent = payments.reduce((sum, payment) => sum + payment.price, 0);
+  const totalBookings = payments.length;
+
+  res.status(200)
+    .set('Content-Security-Policy', "frame-src 'self'")
+    .render('billing', {
+      title: 'Billing Information',
+      payments,
+      totalSpent,
+      totalBookings
+    });
+});
 
 module.exports = {
   getOverview,
@@ -86,5 +146,9 @@ module.exports = {
   getLoginForm,
   getAccount,
   updateUserData,
-  getSignupForm
+  getSignupForm,
+  getMyBookings,
+  getMyReviews,
+  getSettings,
+  getBilling
 }
