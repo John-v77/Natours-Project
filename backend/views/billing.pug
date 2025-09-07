@@ -1,0 +1,63 @@
+extend base
+include _userMenu
+
+block content
+  main.main
+    .user-view
+      +userMenu('billing')
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Billing Information
+          
+          .billing-overview
+            .billing-card
+              .billing-card__header
+                h3.heading-tertiary Account Summary
+              .billing-card__content
+                .billing-detail
+                  span.billing-detail__label Total Spent:
+                  span.billing-detail__value $#{totalSpent || 0}
+                .billing-detail
+                  span.billing-detail__label Tours Booked:
+                  span.billing-detail__value #{totalBookings || 0}
+                .billing-detail
+                  span.billing-detail__label Member Since:
+                  span.billing-detail__value #{user.createdAt ? user.createdAt.toDateString() : 'N/A'}
+
+        .line &nbsp;
+
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Payment History
+          
+          - if (payments && payments.length > 0)
+            .payment-history
+              each payment in payments
+                .payment-item
+                  .payment-item__info
+                    .payment-item__tour= payment.tour.name
+                    .payment-item__date= payment.createdAt.toDateString()
+                  .payment-item__amount $#{payment.price}
+                  .payment-item__status
+                    span.payment-status(class=`payment-status--${payment.paid ? 'paid' : 'pending'}`)
+                      = payment.paid ? 'Paid' : 'Pending'
+          - else
+            .no-payments
+              p.no-payments__text No payment history available.
+              a.btn.btn--green(href='/') Browse Tours
+
+        .line &nbsp;
+
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md Payment Methods
+          
+          .payment-methods
+            .payment-method
+              .payment-method__info
+                svg.payment-method__icon
+                  use(xlink:href='/img/icons.svg#icon-credit-card')
+                .payment-method__details
+                  p.payment-method__type Credit Card
+                  p.payment-method__desc Secure payments via Stripe
+              .payment-method__actions
+                button.btn.btn--small.btn--blue Add Payment Method

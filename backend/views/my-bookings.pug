@@ -1,0 +1,45 @@
+extend base
+include _userMenu
+
+block content
+  main.main
+    .user-view
+      +userMenu('bookings')
+
+      .user-view__content
+        .user-view__form-container
+          h2.heading-secondary.ma-bt-md My Bookings
+          
+          - if (bookings && bookings.length > 0)
+            each booking in bookings
+              .booking-card
+                .booking-card__header
+                  h3.heading-tertiary= booking.tour.name
+                  .booking-card__date Booked: #{booking.createdAt.toDateString()}
+                
+                .booking-card__details
+                  .booking-card__info
+                    .booking-card__detail
+                      span.booking-card__label Tour Date:
+                      span.booking-card__value= booking.tour.startDates[0] ? booking.tour.startDates[0].toDateString() : 'TBD'
+                    .booking-card__detail
+                      span.booking-card__label Price:
+                      span.booking-card__value $#{booking.price}
+                    .booking-card__detail
+                      span.booking-card__label Duration:
+                      span.booking-card__value #{booking.tour.duration} days
+                    .booking-card__detail
+                      span.booking-card__label Difficulty:
+                      span.booking-card__value= booking.tour.difficulty
+                  
+                  .booking-card__image
+                    img(src=`/img/tours/${booking.tour.imageCover}`, alt=`${booking.tour.name}`)
+                
+                .booking-card__actions
+                  a.btn.btn--small.btn--green(href=`/tour/${booking.tour.slug}`) View Tour
+                  - if (new Date(booking.tour.startDates[0]) > new Date())
+                    a.btn.btn--small.btn--red Cancel Booking
+          - else
+            .no-bookings
+              p.no-bookings__text You haven't booked any tours yet.
+              a.btn.btn--green(href='/') Browse Tours
