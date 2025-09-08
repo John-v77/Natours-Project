@@ -1,0 +1,38 @@
+# Build files
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+
+# Version control
+.git
+.gitignore
+
+# Environment files
+.env
+*.env
+config.env
+backend/config.env
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+tests
+coverage
+*.test.js
+*.spec.js
+
+# Documentation
+README.md
+TESTING.md
+
+# CI/CD
+.github

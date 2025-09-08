@@ -5,3 +5,13 @@ Dockerfile
 .git
 .gitignore
 .env
+config.env
+*.env
+.vscode
+.github
+tests
+coverage
+*.test.js
+*.spec.js
+TESTING.md
+README.md

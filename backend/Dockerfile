@@ -1,27 +1,32 @@
-# 1️ Use official Node.js LTS image
+# Use official Node.js LTS image
 FROM node:18-alpine
-LABEL maintainer="John-v77"
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init
 
-# 2️ Set working directory
-WORKDIR /home/node/app
+# Create app directory and set permissions
+RUN mkdir -p /app && addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+WORKDIR /app
 
-# 3️ Copy package files first (better caching)
+# Copy package files first (better caching)
 COPY package*.json ./
 
-# 4️ Install dependencies
-RUN npm install --omit=dev
+# Install dependencies
+RUN npm ci --only=production && npm cache clean --force
 
-# 5️ Copy all app files
+# Copy all app files
 COPY . .
 
-# 6️ Set environment variables
-ENV NODE_ENV=production
-ENV PORT=3000
+# Change ownership to nodejs user
+RUN chown -R nodejs:nodejs /app
+USER nodejs
 
-# 7️ Expose the app port
-EXPOSE 3000
+# Set environment variables
+ENV NODE_ENV=dev
+ENV PORT=8080
 
-# 8️ Start the app
-CMD ["node", "server.js"]
+# Expose the app port (Fly.io typically uses 8080)
+EXPOSE 8080
+
+# Use dumb-init for proper signal handling
+CMD ["dumb-init", "node", "server.js"]
