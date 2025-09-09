@@ -12,11 +12,15 @@ const getCheckoutSession = catchAsync(async (req, res, next) => {
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     mode: 'payment',
-    success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${req.params.tourId
-      }&user=${req.user.id}&price=${tour.price}`,
+    success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
+    metadata: {
+      userId: req.user.id.toString(),
+      tourId: req.params.tourId,
+      price: tour.price.toString()
+    },
 
     line_items: [
       {
@@ -40,20 +44,37 @@ const getCheckoutSession = catchAsync(async (req, res, next) => {
     .set('Content-Security-Policy', "frame-src 'self'")
     .json({
       status: 'success',
-
       session
     })
 })
 
 
-const createBookingCheckout = catchAsync(async (req, res, next) => {
-  // This is only TEMPORARY, because it's UNSECURE: everyone can make bookings without paying
-  const { tour, user, price } = req.query;
+const webhookCheckout = catchAsync(async (req, res, next) => {
+  const signature = req.headers['stripe-signature'];
+  let event;
 
-  if (!tour && !user && !price) return next();
-  await Booking.create({ tour, user, price });
+  try {
+    event = stripe.webhooks.constructEvent(req.body, signature, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    return res.status(400).send(`Webhook signature verification failed: ${err.message}`);
+  }
 
-  res.redirect(req.originalUrl.split('?')[0]);
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    
+    // Extract booking data from session metadata
+    const { userId, tourId, price } = session.metadata;
+    
+    // Create booking in database
+    await Booking.create({
+      tour: tourId,
+      user: userId,
+      price: parseInt(price),
+      paid: true
+    });
+  }
+
+  res.status(200).json({ received: true });
 })
 
 
@@ -67,7 +88,7 @@ const deleteBooking = factory.deleteOne(Booking);
 
 module.exports = {
   getCheckoutSession,
-  createBookingCheckout,
+  webhookCheckout,
   createBooking,
   getBooking,
   getAllBookings,

@@ -5,8 +5,10 @@ const dotenv = require('dotenv');
 //
 //Handle uncaughtException
 process.on('uncaughtException', error => {
-    console.log('Unhandled Exception! -- Shutting down ...')
-    // console.log(error.name, error.message);
+    console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+    console.log('Error name:', error.name);
+    console.log('Error message:', error.message);
+    console.log('Stack trace:', error.stack);
     process.exit(1)
 })
 
@@ -30,8 +32,10 @@ const server = app.listen(port, () => {
 })
 
 process.on('unhandledRejection', error => {
-    console.log(error.name, error.message);
-    console.log('Unhandled Rejection! -- Shutting down ...')
+    console.log('UNHANDLED REJECTION! 💥 Shutting down...');
+    console.log('Error name:', error.name);
+    console.log('Error message:', error.message);
+    console.log('Stack trace:', error.stack);
     server.close(() => {
         process.exit(1)
     })

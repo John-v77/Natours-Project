@@ -62,6 +62,9 @@ const globalLimiter = rateLimit({
 
 app.use('/api', globalLimiter);
 
+// Stripe webhook route (must be before express.json())
+const bookingController = require('./controllers/bookingController');
+app.post('/api/v1/bookings/webhook-checkout', express.raw({ type: 'application/json' }), bookingController.webhookCheckout);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));

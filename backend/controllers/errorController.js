@@ -61,14 +61,16 @@ const sendErrorProd = (err, req, res) => {
     }
 
 
-    // Programming or other unknown error: don't leak error details
+    // Programming or other unknown error: TEMPORARILY showing details for debugging
     // log error
     console.error('Error *', err);
 
-    // Send generic message
+    // Send detailed error for debugging (TEMPORARY)
     return res.status(500).json({
       status: 'error',
-      message: 'Something went very wrong!'
+      message: err.message || 'Something went very wrong!',
+      error: err.name,
+      stack: process.env.NODE_ENV === 'production' ? err.stack : undefined
     })
   }
 
