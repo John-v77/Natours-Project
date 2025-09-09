@@ -4,7 +4,6 @@ const dotenv = require('dotenv');
 const Tour = require('../models/tourModel');
 const Review = require('../models/reviewModel');
 const User = require('../models/userModel');
-const colors = require('colors')
 
 dotenv.config({ path: './config.env' })
 

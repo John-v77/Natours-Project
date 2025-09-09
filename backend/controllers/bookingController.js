@@ -3,7 +3,6 @@ const Booking = require("../models/bookingModel");
 const catchAsync = require("../utils/catchAsync");
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const factory = require('../controllers/handlerFactory');
-const colors = require('colors');
 
 const getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1) Get the currently booked tour
