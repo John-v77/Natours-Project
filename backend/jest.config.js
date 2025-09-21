@@ -13,6 +13,9 @@ module.exports = {
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
-  testTimeout: 30000,
-  globalTeardown: '<rootDir>/tests/setup/globalTeardown.js'
+  testTimeout: 60000, // Increased timeout for MongoDB Memory Server
+  globalTeardown: '<rootDir>/tests/setup/globalTeardown.js',
+  maxWorkers: 1, // Run tests serially to avoid MongoDB conflicts
+  forceExit: true, // Force Jest to exit after tests complete
+  detectOpenHandles: true // Help identify hanging resources
 };
