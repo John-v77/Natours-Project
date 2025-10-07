@@ -1,0 +1,12 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "Learning node, express and mongoDB",
+  "scripts": {
+    "start": "cd backend && npm install && npm start",
+    "build": "cd backend && npm install"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
