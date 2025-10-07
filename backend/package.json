@@ -6,7 +6,7 @@
   "scripts": {
     "test": "test",
     "start:prod": "NODE_ENV=production nodemon server.js",
-    "watch:js": "npx esbuild public/js/index.js --bundle --outfile=public/js/bundle.js --format=iife  --target=es6"
+    "watch:js": "npx esbuild public/js/index.js --bundle --outfile=public/js/bundle.js --format=iife --target=es6 --external:*.css"
   },
   "author": "John Vasile",
   "license": "ISC",
