@@ -1,12 +1,9 @@
 (() => {
-  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __defProps = Object.defineProperties;
-  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getOwnPropSymbols = Object.getOwnPropertySymbols;
-  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __propIsEnum = Object.prototype.propertyIsEnumerable;
   var __knownSymbol = (name, symbol) => (symbol = Symbol[name]) ? symbol : Symbol.for("Symbol." + name);
@@ -36,22 +33,6 @@
     for (var name in all3)
       __defProp(target, name, { get: all3[name], enumerable: true });
   };
-  var __copyProps = (to, from, except, desc) => {
-    if (from && typeof from === "object" || typeof from === "function") {
-      for (let key of __getOwnPropNames(from))
-        if (!__hasOwnProp.call(to, key) && key !== except)
-          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-    }
-    return to;
-  };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-    // If the importer is in node compatibility mode or this is not an ESM
-    // file that has been converted to a CommonJS file using a Babel-
-    // compatible transform (i.e. "__esModule" has not been set), then set
-    // "default" to the CommonJS "module.exports" for node compatibility.
-    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-    mod
-  ));
   var __async = (__this, __arguments, generator) => {
     return new Promise((resolve, reject) => {
       var fulfilled = (value) => {
@@ -10010,7 +9991,7 @@
       init_settle();
       isFetchSupported = typeof fetch === "function" && typeof Request === "function" && typeof Response === "function";
       isReadableStreamSupported = isFetchSupported && typeof ReadableStream === "function";
-      encodeText = isFetchSupported && (typeof TextEncoder === "function" ? /* @__PURE__ */ ((encoder) => (str) => encoder.encode(str))(new TextEncoder()) : (str) => __async(null, null, function* () {
+      encodeText = isFetchSupported && (typeof TextEncoder === "function" ? /* @__PURE__ */ ((encoder) => (str) => encoder.encode(str))(new TextEncoder()) : (str) => __async(void 0, null, function* () {
         return new Uint8Array(yield new Response(str).arrayBuffer());
       }));
       test = (fn, ...args) => {
@@ -10044,7 +10025,7 @@
           });
         });
       })(new Response());
-      getBodyLength = (body) => __async(null, null, function* () {
+      getBodyLength = (body) => __async(void 0, null, function* () {
         if (body == null) {
           return 0;
         }
@@ -10068,11 +10049,11 @@
           return (yield encodeText(body)).byteLength;
         }
       });
-      resolveBodyLength = (headers, body) => __async(null, null, function* () {
+      resolveBodyLength = (headers, body) => __async(void 0, null, function* () {
         const length = utils_default.toFiniteNumber(headers.getContentLength());
         return length == null ? getBodyLength(body) : length;
       });
-      fetch_default = isFetchSupported && ((config) => __async(null, null, function* () {
+      fetch_default = isFetchSupported && ((config) => __async(void 0, null, function* () {
         let {
           url,
           method,
@@ -10869,16 +10850,49 @@
     }
   });
 
-  // public/js/login.js
-  var require_login = __commonJS({
-    "public/js/login.js"(exports, module) {
+  // public/js/signup.js
+  var signup;
+  var init_signup = __esm({
+    "public/js/signup.js"() {
       init_axios2();
       init_alerts();
-      var login = (email, password) => __async(null, null, function* () {
+      signup = (name, email, password, passwordConfirm) => __async(void 0, null, function* () {
+        console.log("axios", "poll");
         try {
           const res = yield axios_default({
             method: "POST",
-            url: "http://127.0.0.1:3000/api/v1/users/login",
+            url: "/api/v1/users/signup",
+            data: {
+              name,
+              email,
+              password,
+              passwordConfirm
+            }
+          });
+          if (res.data.status === "success") {
+            showAlert("success", "Account created successfully!");
+            window.setTimeout(() => {
+              location.assign("/");
+            }, 1500);
+          }
+        } catch (err) {
+          showAlert("error", err.response.data.message);
+        }
+      });
+    }
+  });
+
+  // public/js/login.js
+  var login, logout;
+  var init_login = __esm({
+    "public/js/login.js"() {
+      init_axios2();
+      init_alerts();
+      login = (email, password) => __async(void 0, null, function* () {
+        try {
+          const res = yield axios_default({
+            method: "POST",
+            url: "/api/v1/users/login",
             data: {
               email,
               password
@@ -10896,11 +10910,11 @@
           console.log(err);
         }
       });
-      var logout = () => __async(null, null, function* () {
+      logout = () => __async(void 0, null, function* () {
         try {
           const res = yield axios_default({
             method: "GET",
-            url: "http://127.0.0.1:3000/api/v1/users/logout"
+            url: "/api/v1/users/logout"
           });
           if (res.data.status === "success") {
             showAlert("success", "Logged out successfully!");
@@ -10914,16 +10928,6 @@
           showAlert("error", "Error logging out! Try again.");
         }
       });
-      module.exports = {
-        login,
-        logout
-      };
-    }
-  });
-
-  // node_modules/mapbox-gl/dist/mapbox-gl.css
-  var init_mapbox_gl = __esm({
-    "node_modules/mapbox-gl/dist/mapbox-gl.css"() {
     }
   });
 
@@ -10931,8 +10935,7 @@
   var displayMap;
   var init_mapbox = __esm({
     "public/js/mapbox.js"() {
-      init_mapbox_gl();
-      displayMap = (locations) => __async(null, null, function* () {
+      displayMap = (locations) => __async(void 0, null, function* () {
         mapboxgl.accessToken = "pk.eyJ1Ijoiam9obnYxMSIsImEiOiJjbWFla2UzczAwOHJ3MmpvaXg0bzg4M3NjIn0.odMSbQahGQWcEHhEdoZlbA";
         var map = new mapboxgl.Map({
           container: "map",
@@ -10973,9 +10976,9 @@
     "public/js/updateSettings.js"() {
       init_axios2();
       init_alerts();
-      updateSettings = (data, type) => __async(null, null, function* () {
+      updateSettings = (data, type) => __async(void 0, null, function* () {
         try {
-          const url = type === "password" ? "http://127.0.0.1:3000/api/v1/users/updateMyPassword" : "http://127.0.0.1:3000/api/v1/users/updateMyInfo";
+          const url = type === "password" ? "/api/v1/users/updateMyPassword" : "/api/v1/users/updateMyInfo";
           const res = yield axios_default({
             method: "PATCH",
             url,
@@ -10997,7 +11000,7 @@
     "public/js/stripe.js"() {
       init_axios2();
       init_alerts();
-      bookTour = (tourId) => __async(null, null, function* () {
+      bookTour = (tourId) => __async(void 0, null, function* () {
         const stripeKey = "pk_test_51LagyFKqlaZolGZSJ6smj6Hd5kuBZiFOOYh48kH9oeVrm2Y5JNEQegqycqsjfQT8vTKPmjVr7VOwVl2Sg2CSgBbm0057LsLuVF";
         const stripe = Stripe(stripeKey);
         try {
@@ -11020,12 +11023,14 @@
   var require_index = __commonJS({
     "public/js/index.js"(exports) {
       init_lib();
-      var import_login = __toESM(require_login());
+      init_signup();
+      init_login();
       init_mapbox();
       init_updateSettings();
       init_stripe();
       var mapBox = document.getElementById("map");
-      var loginForm = document.querySelector(".form");
+      var loginForm = document.querySelector(".login--form");
+      var signupForm = document.querySelector(".signup--form");
       var logOutBtn = document.querySelector(".nav__el--logout");
       var userDataForm = document.querySelector(".form-user-data");
       var userPasswordForm = document.querySelector(".form-user-password");
@@ -11040,11 +11045,22 @@
           e.preventDefault();
           const email = document.getElementById("email").value;
           const password = document.getElementById("password").value;
-          (0, import_login.login)(email, password);
+          login(email, password);
         });
       }
       if (logOutBtn) {
-        logOutBtn.addEventListener("click", import_login.logout);
+        logOutBtn.addEventListener("click", logout);
+      }
+      if (signupForm) {
+        console.log(signupForm, "signupForm");
+        signupForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const name = document.getElementById("name").value;
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const passwordConfirm = document.getElementById("passwordConfirm").value;
+          signup(name, email, password, passwordConfirm);
+        });
       }
       if (userDataForm) {
         userDataForm.addEventListener("submit", (e) => {
@@ -11057,7 +11073,7 @@
         });
       }
       if (userPasswordForm) {
-        userPasswordForm.addEventListener("submit", (e) => __async(null, null, function* () {
+        userPasswordForm.addEventListener("submit", (e) => __async(exports, null, function* () {
           e.preventDefault();
           document.querySelector(".btn--save-password").textContent = "Updating...";
           const passwordCurrent = document.getElementById("password-current").value;

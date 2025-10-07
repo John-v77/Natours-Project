@@ -1,6 +1,6 @@
 
 // The script has loaded
-import 'mapbox-gl/dist/mapbox-gl.css';
+// import 'mapbox-gl/dist/mapbox-gl.css';
 
 
 export const displayMap = async (locations) => {
