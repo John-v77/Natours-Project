@@ -13,7 +13,7 @@ const userSchema = new Schema({
     required: [true, 'User email is required'],
     unique: true,
     lowercase: true,
-    vaslidate: [validator.isEmail, 'Please provide a valid email']
+    validate: [validator.isEmail, 'Please provide a valid email']
   },
   photo: {
     type: String,
