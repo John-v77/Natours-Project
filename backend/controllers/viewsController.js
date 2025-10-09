@@ -140,6 +140,14 @@ const getBilling = catchAsync(async (req, res) => {
     });
 });
 
+const getBuildingInProgress = catchAsync(async (req, res) => {
+  res.status(200)
+    .set('Content-Security-Policy', "frame-src 'self'")
+    .render('building-in-progress', {
+      title: 'Coming Soon'
+    });
+});
+
 module.exports = {
   getOverview,
   getTour,
@@ -150,5 +158,6 @@ module.exports = {
   getMyBookings,
   getMyReviews,
   getSettings,
-  getBilling
+  getBilling,
+  getBuildingInProgress
 }

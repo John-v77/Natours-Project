@@ -13,6 +13,7 @@ router.get('/settings', authController.protect, viewsController.getSettings);
 router.get('/my-bookings', authController.protect, viewsController.getMyBookings);
 router.get('/my-reviews', authController.protect, viewsController.getMyReviews);
 router.get('/billing', authController.protect, viewsController.getBilling);
+router.get('/building-in-progress', viewsController.getBuildingInProgress);
 
 router.post('/submit-user-data', authController.protect, viewsController.updateUserData);
 
