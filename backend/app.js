@@ -38,13 +38,10 @@ app.use(
   helmet.contentSecurityPolicy({
     useDefaults: true,
     directives: {
-      "script-src": ["'self'"], // Allow scripts from same origin
-
-      // Optional: Allow scripts from specific external domains or add hashes
-      "script-src": ["'self'", "'unsafe-inline'", "'sha256-...'", "https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js"],
-      "script-src": ["'self'", "'unsafe-inline'", "'sha256-...'", "https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css"],
-      "script-src": ["'self'", "'unsafe-inline'", "'sha256-...'", "https://js.stripe.com/"],
-
+      "script-src": ["'self'", "'unsafe-inline'", "https://api.mapbox.com", "https://js.stripe.com"],
+      "frame-src": ["'self'", "https://js.stripe.com"],
+      "style-src": ["'self'", "'unsafe-inline'", "https://api.mapbox.com", "https://fonts.googleapis.com"],
+      "connect-src": ["'self'", "https://api.mapbox.com", "https://api.stripe.com"]
     },
   })
 );
