@@ -49,7 +49,12 @@ const signup = catchAsync(async (req, res, next) => {
 
   const url = `${req.protocol}://${req.get('host')}/me`;
   // await new Email(newUser, `${req.protocol}://${req.get('host')}/`).sendWelcome();
-  await new Email(newUser, url).sendWelcome();
+  try {
+    await new Email(newUser, url).sendWelcome();
+  } catch (err) {
+    // Email sending failed but user was created successfully
+    console.log('Welcome email failed to send:', err.message);
+  }
 
   createSendTaken(newUser, 201, res)
 })
