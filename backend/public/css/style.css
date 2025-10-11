@@ -865,6 +865,75 @@ body {
   }
 }
 
+/* Hide main footer on mobile and show footer-mobile */
+@media only screen and (max-width: 50em) {
+  .footer {
+    display: none;
+  }
+}
+
+.footer-mobile {
+  display: none;
+  background-color: #f7f7f7;
+  padding: 3rem 2rem;
+  font-size: 1.4rem;
+}
+
+/* Hide mobile elements on desktop */
+@media only screen and (min-width: 50.0625em) {
+  .footer-mobile,
+  [class*="-mobile"],
+  [class*="_mobile"] {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: 50em) {
+  .footer-mobile {
+    display: block;
+  }
+}
+
+.footer_links {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.footer-mobile .footer__logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.footer-mobile .footer__logo img {
+  height: 3rem;
+}
+
+.footer-mobile .footer__nav {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-mobile .footer__nav li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-mobile .footer__nav a {
+  color: #777;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.footer-mobile .footer__nav a:hover,
+.footer-mobile .footer__nav a:active {
+  color: #55c57a;
+}
+
+.footer-mobile .footer__copyright {
+  color: #999;
+}
+
 .nav {
   display: -webkit-box;
   display: -ms-flexbox;
