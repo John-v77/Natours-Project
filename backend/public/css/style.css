@@ -52,6 +52,12 @@ body {
   position: relative;
 }
 
+@media only screen and (max-width: 50em) {
+  .main {
+    padding: 3rem 3rem;
+  }
+}
+
 .flex {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1312,6 +1318,21 @@ body {
   box-shadow: 0 2.5rem 8rem 2rem rgba(0, 0, 0, 0.06);
   padding: 5rem 7rem;
   border-radius: 5px;
+}
+
+@media only screen and (max-width: 50em) {
+  .login-form {
+    max-width: 100%;
+    margin: 0;
+    padding: 6rem 4rem;
+    border-radius: 0;
+    min-height: 50vh;
+    box-shadow: none;
+  }
+  
+  .form__input {
+    padding: 0.5rem 1rem !important;
+  }
 }
 
 .form__input {
