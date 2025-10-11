@@ -1434,6 +1434,7 @@ body {
     min-width: 20rem;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     z-index: 1000;
+    margin-top: 1.5rem;
   }
   
   .mobile-menu.active {

@@ -1333,7 +1333,7 @@
       module.exports = {
         set: Object.setPrototypeOf || ("__proto__" in {} ? (
           // eslint-disable-line
-          function(test2, buggy, set) {
+          (function(test2, buggy, set) {
             try {
               set = require_ctx()(Function.call, require_object_gopd().f(Object.prototype, "__proto__").set, 2);
               set(test2, []);
@@ -1347,7 +1347,7 @@
               else set(O, proto);
               return O;
             };
-          }({}, false)
+          })({}, false)
         ) : void 0),
         check
       };
@@ -1367,9 +1367,9 @@
     "node_modules/core-js/modules/_classof.js"(exports, module) {
       var cof = require_cof();
       var TAG = require_wks()("toStringTag");
-      var ARG = cof(/* @__PURE__ */ function() {
+      var ARG = cof(/* @__PURE__ */ (function() {
         return arguments;
-      }()) == "Arguments";
+      })()) == "Arguments";
       var tryGet = function(it, key) {
         try {
           return it[key];
@@ -3620,12 +3620,12 @@
       var nativeReplace = String.prototype.replace;
       var patchedExec = nativeExec;
       var LAST_INDEX = "lastIndex";
-      var UPDATES_LAST_INDEX_WRONG = function() {
+      var UPDATES_LAST_INDEX_WRONG = (function() {
         var re1 = /a/, re2 = /b*/g;
         nativeExec.call(re1, "a");
         nativeExec.call(re2, "a");
         return re1[LAST_INDEX] !== 0 || re2[LAST_INDEX] !== 0;
-      }();
+      })();
       var NPCG_INCLUDED = /()??/.exec("")[1] !== void 0;
       var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED;
       if (PATCH) {
@@ -3766,7 +3766,7 @@
         };
         return "".replace(re, "$<a>") !== "7";
       });
-      var SPLIT_WORKS_WITH_OVERWRITTEN_EXEC = function() {
+      var SPLIT_WORKS_WITH_OVERWRITTEN_EXEC = (function() {
         var re = /(?:)/;
         var originalExec = re.exec;
         re.exec = function() {
@@ -3774,7 +3774,7 @@
         };
         var result = "ab".split(re);
         return result.length === 2 && result[0] === "a" && result[1] === "b";
-      }();
+      })();
       module.exports = function(KEY, length, exec) {
         var SYMBOL = wks(KEY);
         var DELEGATES_TO_SYMBOL = !fails(function() {
@@ -4441,7 +4441,7 @@
       var OwnPromiseCapability;
       var Wrapper;
       var newPromiseCapability = newGenericPromiseCapability = newPromiseCapabilityModule.f;
-      var USE_NATIVE = !!function() {
+      var USE_NATIVE = !!(function() {
         try {
           var promise = $Promise.resolve(1);
           var FakePromise = (promise.constructor = {})[require_wks()("species")] = function(exec) {
@@ -4450,7 +4450,7 @@
           return (isNode || typeof PromiseRejectionEvent == "function") && promise.then(empty) instanceof FakePromise && v8.indexOf("6.6") !== 0 && userAgent.indexOf("Chrome/66") === -1;
         } catch (e) {
         }
-      }();
+      })();
       var isThenable2 = function(it) {
         var then;
         return isObject2(it) && typeof (then = it.then) == "function" ? then : false;
@@ -7104,7 +7104,7 @@
   // node_modules/@babel/polyfill/node_modules/regenerator-runtime/runtime.js
   var require_runtime = __commonJS({
     "node_modules/@babel/polyfill/node_modules/regenerator-runtime/runtime.js"(exports, module) {
-      var runtime = function(exports2) {
+      var runtime = (function(exports2) {
         "use strict";
         var Op = Object.prototype;
         var hasOwn = Op.hasOwnProperty;
@@ -7599,7 +7599,7 @@
           }
         };
         return exports2;
-      }(
+      })(
         // If this script is executing as a CommonJS module, use module.exports
         // as the regeneratorRuntime namespace. Otherwise create a new empty
         // object. Either way, the resulting object will be used to initialize
@@ -7860,7 +7860,7 @@
           own = !IS_FORCED && target && target[key] !== void 0;
           if (own && has(exports2, key)) continue;
           out = own ? target[key] : source[key];
-          exports2[key] = IS_GLOBAL && typeof target[key] != "function" ? source[key] : IS_BIND && own ? ctx(out, global2) : IS_WRAP && target[key] == out ? function(C) {
+          exports2[key] = IS_GLOBAL && typeof target[key] != "function" ? source[key] : IS_BIND && own ? ctx(out, global2) : IS_WRAP && target[key] == out ? (function(C) {
             var F = function(a, b, c) {
               if (this instanceof C) {
                 switch (arguments.length) {
@@ -7877,7 +7877,7 @@
             };
             F[PROTOTYPE] = C[PROTOTYPE];
             return F;
-          }(out) : IS_PROTO && typeof out == "function" ? ctx(Function.call, out) : out;
+          })(out) : IS_PROTO && typeof out == "function" ? ctx(Function.call, out) : out;
           if (IS_PROTO) {
             (exports2.virtual || (exports2.virtual = {}))[key] = out;
             if (type & $export.R && expProto && !expProto[key]) hide(expProto, key, out);
@@ -9991,7 +9991,7 @@
       init_settle();
       isFetchSupported = typeof fetch === "function" && typeof Request === "function" && typeof Response === "function";
       isReadableStreamSupported = isFetchSupported && typeof ReadableStream === "function";
-      encodeText = isFetchSupported && (typeof TextEncoder === "function" ? /* @__PURE__ */ ((encoder) => (str) => encoder.encode(str))(new TextEncoder()) : (str) => __async(void 0, null, function* () {
+      encodeText = isFetchSupported && (typeof TextEncoder === "function" ? /* @__PURE__ */ ((encoder) => (str) => encoder.encode(str))(new TextEncoder()) : (str) => __async(null, null, function* () {
         return new Uint8Array(yield new Response(str).arrayBuffer());
       }));
       test = (fn, ...args) => {
@@ -10025,7 +10025,7 @@
           });
         });
       })(new Response());
-      getBodyLength = (body) => __async(void 0, null, function* () {
+      getBodyLength = (body) => __async(null, null, function* () {
         if (body == null) {
           return 0;
         }
@@ -10049,11 +10049,11 @@
           return (yield encodeText(body)).byteLength;
         }
       });
-      resolveBodyLength = (headers, body) => __async(void 0, null, function* () {
+      resolveBodyLength = (headers, body) => __async(null, null, function* () {
         const length = utils_default.toFiniteNumber(headers.getContentLength());
         return length == null ? getBodyLength(body) : length;
       });
-      fetch_default = isFetchSupported && ((config) => __async(void 0, null, function* () {
+      fetch_default = isFetchSupported && ((config) => __async(null, null, function* () {
         let {
           url,
           method,
@@ -10856,7 +10856,7 @@
     "public/js/signup.js"() {
       init_axios2();
       init_alerts();
-      signup = (name, email, password, passwordConfirm) => __async(void 0, null, function* () {
+      signup = (name, email, password, passwordConfirm) => __async(null, null, function* () {
         console.log("axios", "poll");
         try {
           const res = yield axios_default({
@@ -10888,7 +10888,7 @@
     "public/js/login.js"() {
       init_axios2();
       init_alerts();
-      login = (email, password) => __async(void 0, null, function* () {
+      login = (email, password) => __async(null, null, function* () {
         try {
           const res = yield axios_default({
             method: "POST",
@@ -10910,7 +10910,7 @@
           console.log(err);
         }
       });
-      logout = () => __async(void 0, null, function* () {
+      logout = () => __async(null, null, function* () {
         try {
           const res = yield axios_default({
             method: "GET",
@@ -10935,7 +10935,7 @@
   var displayMap;
   var init_mapbox = __esm({
     "public/js/mapbox.js"() {
-      displayMap = (locations) => __async(void 0, null, function* () {
+      displayMap = (locations) => __async(null, null, function* () {
         mapboxgl.accessToken = "pk.eyJ1Ijoiam9obnYxMSIsImEiOiJjbWFla2UzczAwOHJ3MmpvaXg0bzg4M3NjIn0.odMSbQahGQWcEHhEdoZlbA";
         var map = new mapboxgl.Map({
           container: "map",
@@ -10976,7 +10976,7 @@
     "public/js/updateSettings.js"() {
       init_axios2();
       init_alerts();
-      updateSettings = (data, type) => __async(void 0, null, function* () {
+      updateSettings = (data, type) => __async(null, null, function* () {
         try {
           const url = type === "password" ? "/api/v1/users/updateMyPassword" : "/api/v1/users/updateMyInfo";
           const res = yield axios_default({
@@ -11000,7 +11000,7 @@
     "public/js/stripe.js"() {
       init_axios2();
       init_alerts();
-      bookTour = (tourId) => __async(void 0, null, function* () {
+      bookTour = (tourId) => __async(null, null, function* () {
         const stripeKey = "pk_test_51LagyFKqlaZolGZSJ6smj6Hd5kuBZiFOOYh48kH9oeVrm2Y5JNEQegqycqsjfQT8vTKPmjVr7VOwVl2Sg2CSgBbm0057LsLuVF";
         const stripe = Stripe(stripeKey);
         try {
@@ -11035,6 +11035,8 @@
       var userDataForm = document.querySelector(".form-user-data");
       var userPasswordForm = document.querySelector(".form-user-password");
       var bookBtn = document.getElementById("book-tour");
+      var hamburger = document.querySelector(".hamburger");
+      var mobileMenu = document.querySelector(".mobile-menu");
       if (mapBox) {
         const locations = JSON.parse(mapBox.dataset.locations);
         console.log(locations, "locations");
@@ -11073,7 +11075,7 @@
         });
       }
       if (userPasswordForm) {
-        userPasswordForm.addEventListener("submit", (e) => __async(exports, null, function* () {
+        userPasswordForm.addEventListener("submit", (e) => __async(null, null, function* () {
           e.preventDefault();
           document.querySelector(".btn--save-password").textContent = "Updating...";
           const passwordCurrent = document.getElementById("password-current").value;
@@ -11092,6 +11094,16 @@
           const { tourId } = e.target.dataset;
           console.log(tourId, "tourId", e.target.dataset);
           bookTour(tourId);
+        });
+      }
+      if (hamburger && mobileMenu) {
+        hamburger.addEventListener("click", () => {
+          mobileMenu.classList.toggle("active");
+        });
+        document.addEventListener("click", (e) => {
+          if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+            mobileMenu.classList.remove("active");
+          }
         });
       }
     }
