@@ -65,6 +65,8 @@ block content
       - const parapraphs = tour.description.split('\n');
       each p in parapraphs
         p.description__text= p
+  
+  
 
   section.section-pictures
     each img, i in tour.images
@@ -89,6 +91,16 @@ block content
         h2.heading-secondary What are you waiting for?
         p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
 
+        if user
+          button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
+        else
+          a.button.btn.btn--green.span-all-rows(href="/login") Log in to book tour
+  
+  section.section-cta_mobile
+      .cta__content
+        h2.heading-secondary What are you waiting for?
+        p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
+      .cta__content-mobile-btn
         if user
           button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
         else

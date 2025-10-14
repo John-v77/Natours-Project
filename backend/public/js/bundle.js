@@ -10940,7 +10940,7 @@
         var map = new mapboxgl.Map({
           container: "map",
           style: "mapbox://styles/johnv11/cmaelee6f00ar01s72bgzasdz",
-          // scrollZoom: false,
+          scrollZoom: false,
           center: [-118.113491, 34.111745],
           zoom: 7
           // interactive: false
@@ -11039,7 +11039,6 @@
       var mobileMenu = document.querySelector(".mobile-menu");
       if (mapBox) {
         const locations = JSON.parse(mapBox.dataset.locations);
-        console.log(locations, "locations");
         displayMap(locations);
       }
       if (loginForm) {

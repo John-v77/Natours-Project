@@ -24,7 +24,6 @@ const mobileMenu = document.querySelector('.mobile-menu');
 
 if (mapBox) {
   const locations = JSON.parse(mapBox.dataset.locations);
-  console.log(locations, "locations");
   displayMap(locations);
 }
 
