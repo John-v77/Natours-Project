@@ -10946,7 +10946,7 @@
           // interactive: false
         });
         const bounds = new mapboxgl.LngLatBounds();
-        yield locations.map((loc) => {
+        yield locations.reverse().map((loc) => {
           const el = document.createElement("div");
           el.className = "marker";
           new mapboxgl.Marker({

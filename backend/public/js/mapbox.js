@@ -19,7 +19,7 @@ export const displayMap = async (locations) => {
 
   const bounds = new mapboxgl.LngLatBounds();
   // creates marker
-  await locations.map(loc => {
+  await locations.reverse().map(loc => {
     const el = document.createElement('div');
     el.className = 'marker';
     // adds marker
